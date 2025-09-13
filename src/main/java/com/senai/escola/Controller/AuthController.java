@@ -2,6 +2,7 @@ package com.senai.escola.Controller;
 
 import com.senai.escola.Models.Usuario;
 import com.senai.escola.Service.UsuarioService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,8 +29,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public Usuario register(@RequestBody Usuario usuario) { //register = cadastrar
-        return usuarioService.cadastrarNovoUsuario(usuario);
+    public ResponseEntity register(@RequestBody Usuario usuario) { //register = cadastrar
+        try {
+            // verifica se o usuário já existe
+            if (usuarioService.findByUsername(usuario.getUsername().isPresent)){
+                return ResponseEntity.badRequest().body("Usuário já existe!");
+
+            }
+            Usuario novoUsuario = usuarioService.cadastrarNovousuario(usuario);
+        }
     }
 
 
